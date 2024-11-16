@@ -1,0 +1,68 @@
+# General settings for the project
+project:
+  name: "Sentiment and Feedback Categorization"
+  version: "1.0.0"
+  description: "A tool for sentiment classification and feedback categorization using LlamaIndex and Mistral AI."
+
+# File paths
+paths:
+  input_csv: "/content/sentiments.csv"  # Path to the input feedback CSV file
+  preprocessed_csv: "/content/preprocessed_sentiments.csv"  # Path to save the preprocessed data
+
+# Preprocessing settings
+preprocessing:
+  remove_special_characters: true
+  remove_single_characters: true
+  remove_html_tags: true
+  convert_to_lowercase: true
+  remove_extra_whitespace: true
+  trim_whitespace: true
+
+# LLM settings
+llm:
+  provider: "Mistral AI"
+  api_key: "YOUR_API_KEY"  # Replace with your API key
+  model_name: "mistral-large-latest"
+  temperature: 0.01
+
+# Embedding settings
+embeddings:
+  provider: "HuggingFace"
+  model_name: "BAAI/bge-base-en-v1.5"
+
+# Indexing settings
+indexing:
+  chunk_size: 1024
+  chunk_overlap: 256
+  num_output: 16000
+  context_window: 32000
+
+# Chat engine settings
+chat_engine:
+  chat_mode: "condense_plus_context"
+  similarity_top_k: 25
+  prompt_template: |
+    You are an expert linguist, who is good at classifying customer review sentiments into Positive/Negative labels based upon provided context.
+    Classify customer FeedBack into: Positive, Negative under Sentiment column
+    Classify the FeedBack into: Time Management, Content Quality, User Experience, Suggestions, General Feedback, Positive Feedback, Content Difficulty, Technical Quality, Learning Opportunity under FeedBack category column
+    Generate a table for all the observations.
+
+    Here is the context:
+    {context_str}
+
+    Strictly follow the given format:
+    | Feedback | Sentiment | Feedback category |
+    |----------|-----------|-------------------|
+    | {feedback} | {sentiment} | {feedback_category} |
+
+    **Important:**
+    - Use only information from the provided documents.
+    - Do not use external knowledge or assumptions.
+    - If the feedback does not provide any specific details (e.g., "no", "all good"), classify it as **General Feedback** and assign the sentiment accordingly.
+    - Exclude empty feedback entries from the output.
+    - Format the output properly in markdown, utilizing appropriate tables for clarity.
+
+# Output settings
+output:
+  save_results_to_csv: true
+  results_csv_path: "/content/results.csv"

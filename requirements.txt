@@ -1,0 +1,6 @@
+llama-index
+llama-index-llms-mistralai
+llama-index-embeddings-huggingface
+pandas
+re
+csv
